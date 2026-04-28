@@ -10,7 +10,7 @@ Group Number: 44
 
 Group Members: 
 
-Student 1: Name (Student ID) 
+Student 1: Rashad Razooludheen (s4112596)
 
 Student 2: Ifaz Ahmer(s4064449) 
 
