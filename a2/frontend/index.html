@@ -3,180 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Music App</title>
-    <!-- Tailwind CSS for clean layout and styling -->
+    <title>Cloud Music - Multi-Architecture</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .hidden { display: none !important; }
-    </style>
+    <style>.hidden { display: none !important; }</style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans">
 
-    <!-- Top Navigation / User Area -->
-    <nav class="bg-blue-700 text-white p-4 shadow">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">CloudMusic</h1>
-            <!-- User Area (Displays username and Logout link) -->
+    <!-- Navbar with Architecture Selector -->
+    <nav class="bg-slate-900 text-white p-4 shadow-xl">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-xl font-bold flex items-center">
+                <span class="mr-2">☁️</span> CloudMusic
+            </h1>
+            
+            <!-- Architecture Switcher -->
+            <div class="flex items-center bg-slate-800 p-1 rounded-lg border border-slate-700">
+                <label class="text-[10px] uppercase font-bold px-2 text-slate-400">Backend Mode:</label>
+                <select id="backend-selector" onchange="updateBackend()" class="bg-slate-900 text-sm font-bold py-1 px-2 rounded outline-none text-indigo-400">
+                    <option value="lambda">AWS Lambda (Serverless)</option>
+                    <option value="ecs">Amazon ECS (Container)</option>
+                    <option value="ec2">Amazon EC2 (Virtual Machine)</option>
+                </select>
+            </div>
+
             <div id="user-area" class="hidden flex items-center space-x-4">
-                <span id="display-username" class="font-medium"></span>
-                <a href="#" onclick="logout()" class="text-blue-200 hover:text-white underline text-sm">Logout</a>
+                <span id="display-username" class="text-xs font-medium bg-slate-700 px-3 py-1 rounded-full"></span>
+                <button onclick="logout()" class="text-xs text-slate-400 hover:text-white underline">Logout</button>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto p-4 mt-8">
+    <div class="container mx-auto p-4 mt-8 max-w-6xl">
+        <!-- Status Indicator -->
+        <div class="mb-6 flex justify-center">
+            <div class="text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full bg-indigo-100 text-indigo-600 border border-indigo-200">
+                Connected to: <span id="current-url-display"></span>
+            </div>
+        </div>
 
-        <!-- ================= 1. LOGIN PAGE ================= -->
-        <div id="login-page" class="max-w-md mx-auto bg-white p-8 rounded shadow border">
+        <!-- LOGIN PAGE -->
+        <div id="login-page" class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border">
             <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
-            
-            <div id="login-msg" class="hidden mb-4 p-2 text-sm text-center font-bold text-red-600 bg-red-100 rounded"></div>
-            
-            <input type="email" id="login-email" placeholder="Email" class="w-full p-2 mb-4 border rounded">
-            <input type="password" id="login-password" placeholder="Password" class="w-full p-2 mb-6 border rounded">
-            
-            <button onclick="login()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">Login</button>
-            <p class="mt-4 text-center text-sm">Don't have an account? <a href="#" onclick="switchPage('register-page')" class="text-blue-600 hover:underline">Register</a></p>
+            <div id="login-msg" class="hidden mb-4 p-3 text-sm text-center font-bold rounded"></div>
+            <input type="email" id="login-email" placeholder="Email" class="w-full p-3 mb-4 border rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="password" id="login-password" placeholder="Password" class="w-full p-3 mb-6 border rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+            <button onclick="login()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition">Login</button>
+            <p class="mt-6 text-center text-sm">Don't have an account? <a href="#" onclick="switchPage('register-page')" class="text-indigo-600 font-bold">Register</a></p>
         </div>
 
-        <!-- ================= 2. REGISTER PAGE ================= -->
-        <div id="register-page" class="hidden max-w-md mx-auto bg-white p-8 rounded shadow border">
+        <!-- REGISTER PAGE -->
+        <div id="register-page" class="hidden max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border">
             <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
-            
-            <div id="register-msg" class="hidden mb-4 p-2 text-sm text-center font-bold text-red-600 bg-red-100 rounded"></div>
-            
-            <input type="email" id="reg-email" placeholder="Email" class="w-full p-2 mb-4 border rounded">
-            <input type="text" id="reg-username" placeholder="Username" class="w-full p-2 mb-4 border rounded">
-            <input type="password" id="reg-password" placeholder="Password" class="w-full p-2 mb-6 border rounded">
-            
-            <button onclick="register()" class="w-full bg-green-600 text-white font-bold py-2 rounded hover:bg-green-700">Register</button>
-            <p class="mt-4 text-center text-sm">Already have an account? <a href="#" onclick="switchPage('login-page')" class="text-blue-600 hover:underline">Login</a></p>
+            <div id="register-msg" class="hidden mb-4 p-3 text-sm text-center font-bold rounded"></div>
+            <input type="email" id="reg-email" placeholder="Email" class="w-full p-3 mb-4 border rounded-lg">
+            <input type="text" id="reg-username" placeholder="Username" class="w-full p-3 mb-4 border rounded-lg">
+            <input type="password" id="reg-password" placeholder="Password" class="w-full p-3 mb-6 border rounded-lg">
+            <button onclick="register()" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700">Register</button>
+            <p class="mt-6 text-center text-sm text-gray-600">Already have an account? <a href="#" onclick="switchPage('login-page')" class="text-indigo-600 font-bold">Login</a></p>
         </div>
 
-        <!-- ================= 3. MAIN PAGE ================= -->
-        <div id="main-page" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- Query Area -->
-            <div class="bg-white p-6 rounded shadow border md:col-span-1 h-fit">
-                <h3 class="text-lg font-bold mb-4 border-b pb-2">Query Area</h3>
-                <input type="text" id="q-title" placeholder="Title" class="w-full p-2 mb-3 border rounded text-sm">
-                <input type="text" id="q-year" placeholder="Year" class="w-full p-2 mb-3 border rounded text-sm">
-                <input type="text" id="q-artist" placeholder="Artist" class="w-full p-2 mb-3 border rounded text-sm">
-                <input type="text" id="q-album" placeholder="Album" class="w-full p-2 mb-4 border rounded text-sm">
-                <button onclick="queryMusic()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">Query</button>
-                <div id="query-msg" class="mt-3 text-sm font-bold text-center text-red-600"></div>
+        <!-- MAIN PAGE -->
+        <div id="main-page" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4">
+                <div class="bg-white p-6 rounded-xl shadow border sticky top-4">
+                    <h3 class="font-bold mb-4 border-b pb-2">Search Library</h3>
+                    <div class="space-y-3">
+                        <input type="text" id="q-title" placeholder="Title" class="w-full p-2 border rounded text-sm">
+                        <input type="text" id="q-year" placeholder="Year" class="w-full p-2 border rounded text-sm">
+                        <input type="text" id="q-artist" placeholder="Artist" class="w-full p-2 border rounded text-sm">
+                        <input type="text" id="q-album" placeholder="Album" class="w-full p-2 border rounded text-sm mb-2">
+                        <button onclick="queryMusic()" class="w-full bg-indigo-600 text-white font-bold py-2 rounded hover:bg-indigo-700">Query</button>
+                    </div>
+                    <div id="query-msg" class="mt-4 text-xs font-bold text-center text-red-500 italic"></div>
+                </div>
             </div>
 
-            <div class="md:col-span-2 space-y-6">
-                
-                <!-- Subscription Area -->
-                <div class="bg-white p-6 rounded shadow border">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Subscription Area</h3>
-                    <div id="subscriptions-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Filled by JS -->
-                    </div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <h3 class="font-bold mb-4 border-b pb-2">My Subscriptions</h3>
+                    <div id="subscriptions-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
                 </div>
-
-                <!-- Query Results Area -->
-                <div id="results-area" class="hidden bg-white p-6 rounded shadow border">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Results Area</h3>
-                    <div id="results-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Filled by JS -->
-                    </div>
+                <div id="results-area" class="hidden bg-white p-6 rounded-xl shadow border">
+                    <h3 class="font-bold mb-4 border-b pb-2 text-indigo-600">Search Results</h3>
+                    <div id="results-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Javascript Logic -->
     <script>
-        // ==========================================
-        // EC2 Public IP address
-        // ==========================================
-        const API_URL = "https://8wfzopx3ik.execute-api.us-east-1.amazonaws.com/prod";
-        
-        let currentUser = null; 
+        // CONFIGURATION: ALL BACKENDS IN ONE PLACE
+        const BACKENDS = {
+            lambda: "https://8wfzopx3ik.execute-api.us-east-1.amazonaws.com/prod",
+            ecs: "http://54.210.173.136:80/api",
+            ec2: "http://54.163.41.143:80/api"
+        };
 
-        // --- Page Navigation ---
+        let currentApiUrl = BACKENDS.lambda; 
+        let currentUser = null;
+
+        function updateBackend() {
+            const mode = document.getElementById('backend-selector').value;
+            currentApiUrl = BACKENDS[mode];
+            document.getElementById('current-url-display').innerText = currentApiUrl;
+            console.log("Switching backend to:", currentApiUrl);
+            if (currentUser) loadSubscriptions(); // Refresh data for new backend
+        }
+
+        // Initialize display
+        document.getElementById('current-url-display').innerText = currentApiUrl;
+
         function switchPage(pageId) {
             ['login-page', 'register-page', 'main-page'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(pageId).classList.remove('hidden');
-            
             if (pageId === 'main-page' && currentUser) {
                 document.getElementById('user-area').classList.remove('hidden');
-                document.getElementById('display-username').innerText = currentUser.user_name; // User Area req
-                loadSubscriptions(); // Loads clean state initially
+                document.getElementById('display-username').innerText = currentUser.user_name;
+                loadSubscriptions();
             } else {
                 document.getElementById('user-area').classList.add('hidden');
             }
         }
 
-        function showMsg(elementId, message, isError) {
-            const el = document.getElementById(elementId);
-            el.innerText = message;
-            el.className = `mb-4 p-2 text-sm text-center font-bold rounded ${isError ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`;
-            el.classList.remove('hidden');
-        }
-
-        // --- 1. LOGIN LOGIC ---
         async function login() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             try {
-                const res = await fetch(`${API_URL}/login`, {
+                const res = await fetch(`${currentApiUrl}/login`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({email, password})
                 });
                 const data = await res.json();
-                
                 if (res.ok) {
                     currentUser = data;
-                    document.getElementById('login-msg').classList.add('hidden');
-                    switchPage('main-page'); // Redirect to main page
+                    switchPage('main-page');
                 } else {
-                    // Displays exactly: "email or password is invalid"
-                    showMsg('login-msg', data.message, true); 
+                    const el = document.getElementById('login-msg');
+                    el.innerText = data.message;
+                    el.className = "mb-4 p-3 text-sm text-center font-bold rounded bg-red-100 text-red-600";
+                    el.classList.remove('hidden');
                 }
-            } catch (e) {
-                showMsg('login-msg', "Server connection error.", true);
-            }
+            } catch (e) { alert("Connection Error to " + currentApiUrl); }
         }
 
-        // --- 2. REGISTER LOGIC ---
         async function register() {
             const email = document.getElementById('reg-email').value;
             const user_name = document.getElementById('reg-username').value;
             const password = document.getElementById('reg-password').value;
             try {
-                const res = await fetch(`${API_URL}/register`, {
+                const res = await fetch(`${currentApiUrl}/register`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({email, user_name, password})
                 });
-                const data = await res.json();
-                
                 if (res.ok) {
-                    alert("Registration successful.");
-                    switchPage('login-page'); // Redirect to login page
+                    alert("Registration Successful!");
+                    switchPage('login-page');
                 } else {
-                    // Displays exactly: "The email already exists"
-                    showMsg('register-msg', data.message, true); 
+                    const data = await res.json();
+                    const el = document.getElementById('register-msg');
+                    el.innerText = data.message;
+                    el.className = "mb-4 p-3 text-sm text-center font-bold rounded bg-red-100 text-red-600";
+                    el.classList.remove('hidden');
                 }
-            } catch (e) {
-                showMsg('register-msg', "Server connection error.", true);
-            }
+            } catch (e) { alert("Connection Error"); }
         }
 
         function logout() {
-            currentUser = null; // Session terminated
-            document.getElementById('login-email').value = '';
-            document.getElementById('login-password').value = '';
-            document.getElementById('results-area').classList.add('hidden');
+            currentUser = null;
             switchPage('login-page');
         }
 
-        // --- 3. QUERY LOGIC ---
         async function queryMusic() {
             const title = document.getElementById('q-title').value;
             const year = document.getElementById('q-year').value;
@@ -191,80 +189,64 @@
             if(artist) params.append('artist', artist);
             if(album) params.append('album', album);
 
-            resultsArea.classList.add('hidden');
-
             try {
-                const res = await fetch(`${API_URL}/music?${params.toString()}`);
+                const res = await fetch(`${currentApiUrl}/music?${params.toString()}`);
                 const data = await res.json();
-
                 if (res.ok) {
                     msgEl.innerText = "";
                     document.getElementById('results-container').innerHTML = data.results.map(s => renderSongCard(s, false)).join('');
                     resultsArea.classList.remove('hidden');
                 } else {
-                    // Displays exactly: "No result is retrieved. Please query again"
-                    msgEl.innerText = data.message; 
+                    msgEl.innerText = data.message;
+                    resultsArea.classList.add('hidden');
                 }
-            } catch (e) {
-                msgEl.innerText = "Server connection error.";
-            }
+            } catch (e) { msgEl.innerText = "Connection failed."; }
         }
 
-        // --- 3. SUBSCRIPTION LOGIC ---
         async function loadSubscriptions() {
             const container = document.getElementById('subscriptions-container');
-            container.innerHTML = '<p class="text-sm text-gray-500">Loading...</p>';
+            container.innerHTML = '<p class="text-xs text-gray-400 italic">Refreshing...</p>';
             try {
-                const res = await fetch(`${API_URL}/subscriptions?email=${currentUser.email}`);
+                const res = await fetch(`${currentApiUrl}/subscriptions?email=${currentUser.email}`);
                 const data = await res.json();
-                
                 if (data.subscriptions.length === 0) {
-                    // Clean state requirement
-                    container.innerHTML = '<p class="text-sm text-gray-500">No subscriptions yet.</p>';
+                    container.innerHTML = '<p class="text-sm text-gray-400">No subscriptions found.</p>';
                 } else {
                     container.innerHTML = data.subscriptions.map(sub => renderSongCard(sub.song_data, true)).join('');
                 }
-            } catch (e) {
-                container.innerHTML = '<p class="text-sm text-red-500">Failed to load subscriptions.</p>';
-            }
+            } catch (e) { container.innerHTML = 'Error loading subscriptions.'; }
         }
 
         async function subscribe(songDataStr) {
             const song = JSON.parse(decodeURIComponent(songDataStr));
-            await fetch(`${API_URL}/subscriptions`, {
+            await fetch(`${currentApiUrl}/subscriptions`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ email: currentUser.email, title_album: song.title_album, song_data: song })
             });
-            loadSubscriptions(); // Refresh Subscription Area
+            loadSubscriptions();
         }
 
         async function removeSubscription(title_album) {
-            await fetch(`${API_URL}/subscriptions`, {
+            await fetch(`${currentApiUrl}/subscriptions`, {
                 method: 'DELETE',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ email: currentUser.email, title_album: title_album })
             });
-            loadSubscriptions(); // Refresh Subscription Area
+            loadSubscriptions();
         }
 
-        // Template generator for music cards (displays S3 image and buttons)
         function renderSongCard(song, isSubscribed) {
             const encodedData = encodeURIComponent(JSON.stringify(song));
-            
-            // Requirement: "Remove" and "Subscribe" buttons
             const btn = isSubscribed 
-                ? `<button onclick="removeSubscription('${song.title_album}')" class="w-full mt-2 border border-red-500 text-red-600 hover:bg-red-50 text-xs font-bold py-1 rounded">Remove</button>`
-                : `<button onclick="subscribe('${encodedData}')" class="w-full mt-2 bg-blue-100 border border-blue-300 text-blue-700 hover:bg-blue-200 text-xs font-bold py-1 rounded">Subscribe</button>`;
+                ? `<button onclick="removeSubscription('${song.title_album}')" class="w-full mt-4 border border-red-200 text-red-600 hover:bg-red-50 py-1 rounded-lg text-xs font-bold transition">Remove</button>`
+                : `<button onclick="subscribe('${encodedData}')" class="w-full mt-4 bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 py-1 rounded-lg text-xs font-bold transition">Subscribe</button>`;
 
-            // Requirement: "corresponding artist image retrieved from S3"
             return `
-            <div class="bg-gray-50 border p-3 flex flex-col items-center text-center rounded">
-                <img src="${song.image_url}" alt="${song.artist}" class="w-20 h-20 object-cover rounded shadow-sm mb-2">
-                <h4 class="font-bold text-gray-800 text-sm">${song.title}</h4>
-                <p class="text-xs text-gray-600">${song.artist}</p>
-                <p class="text-xs text-gray-500">${song.year}</p>
-                <p class="text-xs text-gray-400 italic flex-grow">${song.album}</p>
+            <div class="bg-white border border-gray-100 p-4 flex flex-col items-center text-center rounded-xl shadow-sm hover:shadow-md transition">
+                <img src="${song.image_url}" alt="${song.artist}" class="w-20 h-20 object-cover rounded-lg shadow-sm mb-3" onerror="this.src='https://via.placeholder.com/150'">
+                <h4 class="font-bold text-gray-800 text-sm line-clamp-1">${song.title}</h4>
+                <p class="text-[10px] text-gray-500">${song.artist} • ${song.year}</p>
                 ${btn}
             </div>`;
         }
