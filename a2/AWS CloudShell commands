@@ -1,0 +1,11 @@
+upload the 2026a2_songs.json file, along with these 4 python
+
+python 1_setup_login.py
+
+python 2_setup_music.py
+
+python 3_load_data.py
+
+python 4_upload_s3.py
+
+
