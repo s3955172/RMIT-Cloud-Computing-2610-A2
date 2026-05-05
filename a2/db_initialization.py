@@ -6,9 +6,9 @@ from botocore.exceptions import ClientError
 
 # --- CONFIGURATION (Update these with your actual details) ---
 REGION = "us-east-1"  
-S3_BUCKET_NAME = "music-app-images-s31234567"  # Replace with your student ID
-STUDENT_ID = "s31234567"                       # Replace with your student ID
-STUDENT_NAME = "John Doe"                      # Replace with your Name
+S3_BUCKET_NAME = "music-app-images-s3955172"  # Replace with your student ID
+STUDENT_ID = "s3955172"                       # Replace with your student ID
+STUDENT_NAME = "Egor Zvyagin"                      # Replace with your Name
 SONGS_FILE = "2026a2_songs.json"
 
 # --- AWS CLIENTS ---
