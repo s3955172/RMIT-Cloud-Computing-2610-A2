@@ -24,20 +24,10 @@ def handle_subscriptions(method, query_params, body, headers):
             if 'song_data' in s and 'image_url' in s['song_data']:
                 s['song_data']['image_url'] = get_secure_url(s['song_data']['image_url'])
         return {"statusCode": 200, "headers": headers, "body": json.dumps({"subscriptions": subs})}
-
     elif method == "POST":
-        table.put_item(Item={
-            'email': body.get('email'),
-            'title_album': body.get('title_album'),
-            'song_data': body.get('song_data')
-        })
-        return {"statusCode": 201, "headers": headers, "body": json.dumps({"message": "Subscribed successfully"})}
-
+        table.put_item(Item={'email': body.get('email'), 'title_album': body.get('title_album'), 'song_data': body.get('song_data')})
+        return {"statusCode": 201, "headers": headers, "body": json.dumps({"message": "Subscribed"})}
     elif method == "DELETE":
-        table.delete_item(Key={
-            'email': body.get('email'),
-            'title_album': body.get('title_album')
-        })
-        return {"statusCode": 200, "headers": headers, "body": json.dumps({"message": "Subscription removed"})}
-    
+        table.delete_item(Key={'email': body.get('email'), 'title_album': body.get('title_album')})
+        return {"statusCode": 200, "headers": headers, "body": json.dumps({"message": "Removed"})}
     return None
