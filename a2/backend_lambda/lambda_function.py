@@ -15,20 +15,16 @@ def lambda_handler(event, context):
         except:
             pass
 
-    # Standard CORS headers required for API Gateway proxy integration
     headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST,DELETE"
     }
 
-    # Handle Preflight OPTIONS requests
     if method == "OPTIONS":
         return {"statusCode": 200, "headers": headers, "body": ""}
 
     response = None
-
-    # Routing logic
     if path in ["/login", "/register"]:
         response = handle_auth(path, method, body, headers)
     elif path == "/music":
@@ -39,8 +35,4 @@ def lambda_handler(event, context):
     if response:
         return response
 
-    return {
-        "statusCode": 404,
-        "headers": headers,
-        "body": json.dumps({"message": "Resource not found"})
-    }
+    return {"statusCode": 404, "headers": headers, "body": json.dumps({"message": "Resource not found"})}
