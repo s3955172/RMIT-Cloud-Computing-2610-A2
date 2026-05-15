@@ -34,6 +34,9 @@ def handle_music(method, query_params, headers):
     # Query Logic (Matches EC2 logic)
     if year and not any([title, artist, album]):
         items = table.query(IndexName='YearTitleGSI', KeyConditionExpression=Key('year').eq(year)).get('Items', [])
+    elif artist and year and not any([title, album]):
+        # lsi fix
+        items = table.query(IndexName='ArtistYearLSI', KeyConditionExpression=Key('artist').eq(artist) & Key('year').eq(year)).get('Items', [])
     elif artist and not any([title, year, album]):
         items = table.query(KeyConditionExpression=Key('artist').eq(artist)).get('Items', [])
     else:
