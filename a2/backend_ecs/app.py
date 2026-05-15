@@ -83,6 +83,9 @@ def query_music():
     
     if year and not artist and not title and not album:
         response = table.query(IndexName='YearTitleGSI', KeyConditionExpression=Key('year').eq(year))
+    elif artist and year and not title and not album:
+        #LSI FIx
+        response = table.query(IndexName='ArtistYearLSI', KeyConditionExpression=Key('artist').eq(artist) & Key('year').eq(year))
     elif artist and not title and not year and not album:
         response = table.query(KeyConditionExpression=Key('artist').eq(artist))
     else:
