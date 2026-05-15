@@ -1,1 +1,3 @@
-flaskflask-corsboto3
+flask
+flask-cors
+boto3
